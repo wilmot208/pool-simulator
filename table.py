@@ -9,6 +9,8 @@ class Table(object):
 		self.static_body = params.get('static_body')
 
 	def toList(self): 
-		static_lines = [pymunk.Segment(self.static_body, (19, 19), (0, 100), 0.0),
-                       pymunk.Segment(self.static_body, (100, 0), (100, 100), 0.0)]
+		static_lines = [pymunk.Segment(self.static_body, (self.padding, self.padding), (self.length - self.padding, self.padding), 0.0),
+                       pymunk.Segment(self.static_body, (self.padding, self.padding), (self.padding, self.height - self.padding), 0.0),
+					   pymunk.Segment(self.static_body, (self.padding, self.height - self.padding), (self.length - self.padding, self.height - self.padding), 0.0),
+					   pymunk.Segment(self.static_body, (self.length - self.padding, self.height - self.padding), (self.length - self.padding, self.padding), 0.0)]
 		return static_lines

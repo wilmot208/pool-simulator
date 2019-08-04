@@ -21,6 +21,9 @@ import pymunk.pygame_util
 import table
 
 TABLE_COLOUR = (44.0, 62.0, 80.0)
+TABLE_LENGTH = 708
+TABLE_HEIGHT = 411
+TABLE_PADDING = 25
 
 class BouncyBalls(object):
     """
@@ -29,7 +32,7 @@ class BouncyBalls(object):
     def __init__(self):
         # Space
         self._space = pymunk.Space()
-        self._space.gravity = (0.0, 0.0)
+        self._space.gravity = (0.0, -900.0)
 
         # Physics
         # Time step
@@ -39,7 +42,7 @@ class BouncyBalls(object):
 
         # pygame
         pygame.init()
-        self._screen = pygame.display.set_mode((708, 411))
+        self._screen = pygame.display.set_mode((TABLE_LENGTH, TABLE_HEIGHT))
         self._clock = pygame.time.Clock()
 
         self._draw_options = pymunk.pygame_util.DrawOptions(self._screen)
@@ -80,7 +83,7 @@ class BouncyBalls(object):
         :return: None
         """
         static_body = self._space.static_body
-        static_lines = table.Table({"height": 0, "length": 0, "padding": 0, "static_body": static_body})
+        static_lines = table.Table({"height": TABLE_HEIGHT, "length": TABLE_LENGTH, "padding": TABLE_PADDING, "static_body": static_body})
         static_lines = static_lines.toList()
         for line in static_lines:
             line.elasticity = 0.95
