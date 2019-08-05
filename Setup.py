@@ -24,15 +24,17 @@ TABLE_COLOUR = (44.0, 62.0, 80.0)
 TABLE_LENGTH = 708
 TABLE_HEIGHT = 411
 TABLE_PADDING = 25
+CORNER_POCKET_WIDTH = 34.2
+CENTRAL_POCKET_WIDTH = 38.1
 
 class BouncyBalls(object):
     """
-    This class implements the set cueball and table setup.
+    This class implements the ball and table setup.
     """
     def __init__(self):
         # Space
         self._space = pymunk.Space()
-        self._space.gravity = (0.0, -900.0)
+        self._space.gravity = (0.0, -981.0)
 
         # Physics
         # Time step
@@ -83,7 +85,7 @@ class BouncyBalls(object):
         :return: None
         """
         static_body = self._space.static_body
-        static_lines = table.Table({"height": TABLE_HEIGHT, "length": TABLE_LENGTH, "padding": TABLE_PADDING, "static_body": static_body})
+        static_lines = table.Table({"height": TABLE_HEIGHT, "length": TABLE_LENGTH, "padding": TABLE_PADDING, "corner_pocket_width": CORNER_POCKET_WIDTH, "central_pocket_width": CENTRAL_POCKET_WIDTH, "static_body": static_body})
         static_lines = static_lines.toList()
         for line in static_lines:
             line.elasticity = 0.95
@@ -113,7 +115,7 @@ class BouncyBalls(object):
             self._create_ball()
             self._ticks_to_next_ball = 100
         # Remove balls that fall below 100 vertically
-        balls_to_remove = [ball for ball in self._balls if ball.body.position.y < 100]
+        balls_to_remove = [ball for ball in self._balls if ball.body.position.y < -100]
         for ball in balls_to_remove:
             self._space.remove(ball, ball.body)
             self._balls.remove(ball)
@@ -124,11 +126,11 @@ class BouncyBalls(object):
         :return:
         """
         mass = 10
-        radius = 25
+        radius = 8.55
         inertia = pymunk.moment_for_circle(mass, 0, radius, (0, 0))
         body = pymunk.Body(mass, inertia)
         x = random.randint(115, 350)
-        body.position = x, 400
+        body.position = x, 250
         shape = pymunk.Circle(body, radius, (0, 0))
         shape.elasticity = 0.95
         shape.friction = 0.9
