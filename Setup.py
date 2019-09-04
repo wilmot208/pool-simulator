@@ -18,7 +18,8 @@ from pygame.color import *
 import pymunk
 import pymunk.pygame_util
 
-import table
+from ball import Ball
+from table import Table
 
 SCALE_FACTOR = 4
 TABLE_COLOUR = (255.0, 255.0, 255.0)
@@ -30,10 +31,12 @@ CENTRAL_POCKET_WIDTH = 12.7 * SCALE_FACTOR
 WINDOW_LENGTH = TABLE_LENGTH + 200
 WINDOW_HEIGHT = TABLE_HEIGHT + 200
 
-class BouncyBalls(object):
+
+class PoolGame(object):
     """
-    This class implements the ball and table setup.
+    This class implements the setup for a game of pool.
     """
+
     def __init__(self):
         # Space
         self._space = pymunk.Space()
@@ -89,7 +92,8 @@ class BouncyBalls(object):
         :return: None
         """
         static_body = self._space.static_body
-        static_lines = table.Table({"height": TABLE_HEIGHT, "length": TABLE_LENGTH, "corner_pocket_width": CORNER_POCKET_WIDTH, "central_pocket_width": CENTRAL_POCKET_WIDTH, "static_body": static_body})
+        static_lines = Table({"height": TABLE_HEIGHT, "length": TABLE_LENGTH, "corner_pocket_width": CORNER_POCKET_WIDTH,
+                              "central_pocket_width": CENTRAL_POCKET_WIDTH, "static_body": static_body})
         static_lines = static_lines.shift(100, 100)
         for line in static_lines:
             line.elasticity = 0.95
@@ -119,7 +123,8 @@ class BouncyBalls(object):
             self._create_ball()
             self._ticks_to_next_ball = 100
         # Remove balls that fall below 100 vertically
-        balls_to_remove = [ball for ball in self._balls if ball.body.position.y < -100]
+        balls_to_remove = [
+            ball for ball in self._balls if ball.body.position.y < -100]
         for ball in balls_to_remove:
             self._space.remove(ball, ball.body)
             self._balls.remove(ball)
@@ -129,17 +134,16 @@ class BouncyBalls(object):
         Create a ball.
         :return:
         """
-        mass = 10
-        radius = 8.55
-        inertia = pymunk.moment_for_circle(mass, 0, radius, (0, 0))
-        body = pymunk.Body(mass, inertia)
-        x = random.randint(115, 350)
-        body.position = x, 250
-        shape = pymunk.Circle(body, radius, (0, 0))
-        shape.elasticity = 0.95
-        shape.friction = 0.9
-        self._space.add(body, shape)
-        self._balls.append(shape)
+        new_ball = Ball()
+        self._add_ball(new_ball)
+
+    def _add_ball(self, ball):
+        """
+        Add a ball to the space
+        :return: None
+        """
+        self._space.add(ball.body, ball.shape)
+        self._balls.append(ball.shape)
 
     def _clear_screen(self):
         """
@@ -149,7 +153,6 @@ class BouncyBalls(object):
         self._screen.fill(TABLE_COLOUR)
         background_image = pygame.image.load("table.png")
         self._screen.blit(background_image, [0, 0])
-            
 
     def _draw_objects(self):
         """
@@ -160,5 +163,5 @@ class BouncyBalls(object):
 
 
 if __name__ == '__main__':
-    game = BouncyBalls()
+    game = PoolGame()
     game.run()
