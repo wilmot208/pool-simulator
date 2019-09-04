@@ -84,7 +84,8 @@ class PoolGame(object):
         """
         static_body = self._space.static_body
         static_lines = Table({"height": TABLE_HEIGHT, "length": TABLE_LENGTH, "corner_pocket_width": CORNER_POCKET_WIDTH,
-                              "central_pocket_width": CENTRAL_POCKET_WIDTH, "static_body": static_body})
+                              "central_pocket_width": CENTRAL_POCKET_WIDTH, "corner_pocket_depth": CORNER_POCKET_DEPTH,
+                              "central_pocket_depth": CENTRAL_POCKET_DEPTH, "static_body": static_body})
         static_lines = static_lines.shift(100, 100)
         for line in static_lines:
             line.elasticity = 0.95
