@@ -27,10 +27,32 @@ TABLE_PADDING = 25
 CORNER_POCKET_WIDTH = 34.2
 CENTRAL_POCKET_WIDTH = 38.1
 
-class BouncyBalls(object):
+
+class Ball(object):
     """
-    This class implements the ball and table setup.
+    This class implements a pool ball.
     """
+
+    def __init__(self):
+        self.mass = 10
+        self.radius = 8.55
+        self.inertia = pymunk.moment_for_circle(
+            self.mass, 0, self.radius, (0, 0))
+
+        self.body = pymunk.Body(self.mass, self.inertia)
+        self.x = random.randint(115, 350)
+        self.body.position = self.x, 250
+
+        self.shape = pymunk.Circle(self.body, self.radius, (0, 0))
+        self.shape.elasticity = 0.95
+        self.shape.friction = 0.9
+
+
+class PoolGame(object):
+    """
+    This class implements the setup for a game of pool.
+    """
+
     def __init__(self):
         # Space
         self._space = pymunk.Space()
@@ -85,7 +107,8 @@ class BouncyBalls(object):
         :return: None
         """
         static_body = self._space.static_body
-        static_lines = table.Table({"height": TABLE_HEIGHT, "length": TABLE_LENGTH, "padding": TABLE_PADDING, "corner_pocket_width": CORNER_POCKET_WIDTH, "central_pocket_width": CENTRAL_POCKET_WIDTH, "static_body": static_body})
+        static_lines = table.Table({"height": TABLE_HEIGHT, "length": TABLE_LENGTH, "padding": TABLE_PADDING,
+                                    "corner_pocket_width": CORNER_POCKET_WIDTH, "central_pocket_width": CENTRAL_POCKET_WIDTH, "static_body": static_body})
         static_lines = static_lines.toList()
         for line in static_lines:
             line.elasticity = 0.95
@@ -115,7 +138,8 @@ class BouncyBalls(object):
             self._create_ball()
             self._ticks_to_next_ball = 100
         # Remove balls that fall below 100 vertically
-        balls_to_remove = [ball for ball in self._balls if ball.body.position.y < -100]
+        balls_to_remove = [
+            ball for ball in self._balls if ball.body.position.y < -100]
         for ball in balls_to_remove:
             self._space.remove(ball, ball.body)
             self._balls.remove(ball)
@@ -125,17 +149,16 @@ class BouncyBalls(object):
         Create a ball.
         :return:
         """
-        mass = 10
-        radius = 8.55
-        inertia = pymunk.moment_for_circle(mass, 0, radius, (0, 0))
-        body = pymunk.Body(mass, inertia)
-        x = random.randint(115, 350)
-        body.position = x, 250
-        shape = pymunk.Circle(body, radius, (0, 0))
-        shape.elasticity = 0.95
-        shape.friction = 0.9
-        self._space.add(body, shape)
-        self._balls.append(shape)
+        new_ball = Ball()
+        self._add_ball(new_ball)
+
+    def _add_ball(self, ball):
+        """
+        Add a ball to the space
+        :return: None
+        """
+        self._space.add(ball.body, ball.shape)
+        self._balls.append(ball.shape)
 
     def _clear_screen(self):
         """
@@ -143,7 +166,6 @@ class BouncyBalls(object):
         :return: None
         """
         self._screen.fill(TABLE_COLOUR)
-            
 
     def _draw_objects(self):
         """
@@ -154,5 +176,5 @@ class BouncyBalls(object):
 
 
 if __name__ == '__main__':
-    game = BouncyBalls()
+    game = PoolGame()
     game.run()
