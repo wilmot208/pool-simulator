@@ -21,12 +21,15 @@ import pymunk.pygame_util
 from ball import Ball
 from table import Table
 
-TABLE_COLOUR = (44.0, 62.0, 80.0)
-TABLE_LENGTH = 708
-TABLE_HEIGHT = 411
-TABLE_PADDING = 25
-CORNER_POCKET_WIDTH = 34.2
-CENTRAL_POCKET_WIDTH = 38.1
+SCALE_FACTOR = 4
+TABLE_COLOUR = (255.0, 255.0, 255.0)
+TABLE_LENGTH = 198 * SCALE_FACTOR
+TABLE_HEIGHT = 99 * SCALE_FACTOR
+CORNER_POCKET_WIDTH = 11.4 * SCALE_FACTOR
+CENTRAL_POCKET_WIDTH = 12.7 * SCALE_FACTOR
+
+WINDOW_LENGTH = TABLE_LENGTH + 200
+WINDOW_HEIGHT = TABLE_HEIGHT + 200
 
 
 class PoolGame(object):
@@ -47,7 +50,8 @@ class PoolGame(object):
 
         # pygame
         pygame.init()
-        self._screen = pygame.display.set_mode((TABLE_LENGTH, TABLE_HEIGHT))
+
+        self._screen = pygame.display.set_mode((WINDOW_LENGTH, WINDOW_HEIGHT))
         self._clock = pygame.time.Clock()
 
         self._draw_options = pymunk.pygame_util.DrawOptions(self._screen)
@@ -67,12 +71,12 @@ class PoolGame(object):
         The main loop of the game.
         :return: None
         """
+
         # Main loop
         while self._running:
             # Progress time forward
             for x in range(self._physics_steps_per_frame):
                 self._space.step(self._dt)
-
             self._process_events()
             self._update_balls()
             self._clear_screen()
@@ -88,9 +92,9 @@ class PoolGame(object):
         :return: None
         """
         static_body = self._space.static_body
-        static_lines = Table({"height": TABLE_HEIGHT, "length": TABLE_LENGTH, "padding": TABLE_PADDING,
-                              "corner_pocket_width": CORNER_POCKET_WIDTH, "central_pocket_width": CENTRAL_POCKET_WIDTH, "static_body": static_body})
-        static_lines = static_lines.toList()
+        static_lines = Table({"height": TABLE_HEIGHT, "length": TABLE_LENGTH, "corner_pocket_width": CORNER_POCKET_WIDTH,
+                              "central_pocket_width": CENTRAL_POCKET_WIDTH, "static_body": static_body})
+        static_lines = static_lines.shift(100, 100)
         for line in static_lines:
             line.elasticity = 0.95
             line.friction = 0.9
@@ -147,6 +151,8 @@ class PoolGame(object):
         :return: None
         """
         self._screen.fill(TABLE_COLOUR)
+        background_image = pygame.image.load("table.png")
+        self._screen.blit(background_image, [0, 0])
 
     def _draw_objects(self):
         """
