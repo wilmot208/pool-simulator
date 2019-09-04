@@ -16,7 +16,9 @@ class Table(object):
                                      ((self.length - self.central_pocket_width) / float(2), 0),
                                      0.0)
         bottom_right = pymunk.Segment(self.static_body,
-                                      ((self.length + self.central_pocket_width) / float(2), 0),
+                                      ((self.length +
+                                        self.central_pocket_width) /
+                                       float(2), 0),
                                       (self.length -
                                        self.corner_pocket_width / 2 ** 0.5, 0),
                                       0.0)
@@ -38,12 +40,14 @@ class Table(object):
                                     self.corner_pocket_width / 2 ** 0.5),
                                    0.0)
         right_side = pymunk.Segment(self.static_body,
-                                    (self.length, self.corner_pocket_width / 2 ** 0.5),
+                                    (self.length,
+                                     self.corner_pocket_width / 2 ** 0.5),
                                     (self.length, self.height -
                                      self.corner_pocket_width / 2 ** 0.5),
                                     0.0)
 
-        return [bottom_left, bottom_right, top_left, top_right, left_side, right_side]
+        return [bottom_left, bottom_right, top_left,
+                top_right, left_side, right_side]
 
     def shift(self, x, y):
         static_lines = self.getStaticLines()

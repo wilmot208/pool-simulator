@@ -1,7 +1,3 @@
-"""This example spawns (bouncing) balls randomly on a L-shape constructed of 
-two segment shapes. Not interactive.
-"""
-
 __version__ = "$Id:$"
 __docformat__ = "reStructuredText"
 
@@ -22,6 +18,7 @@ from ball import Ball
 from table import Table
 
 from constants import *
+
 
 class PoolGame(object):
     """
@@ -103,30 +100,22 @@ class PoolGame(object):
                 self._running = False
             elif event.type == KEYDOWN and event.key == K_p:
                 pygame.image.save(self._screen, "bouncing_balls.png")
+            elif event.type == MOUSEBUTTONDOWN and event.button == 1:
+                x, y = event.pos
+                y = WINDOW_HEIGHT - y
+                self._add_ball(Ball(x, y))
 
     def _update_balls(self):
         """
         Create/remove balls as necessary. Call once per frame only.
         :return: None
         """
-        self._ticks_to_next_ball -= 1
-        if self._ticks_to_next_ball <= 0:
-            self._create_ball()
-            self._ticks_to_next_ball = 100
         # Remove balls that fall below 100 vertically
         balls_to_remove = [
             ball for ball in self._balls if ball.body.position.y < -100]
         for ball in balls_to_remove:
             self._space.remove(ball, ball.body)
             self._balls.remove(ball)
-
-    def _create_ball(self):
-        """
-        Create a ball.
-        :return:
-        """
-        new_ball = Ball()
-        self._add_ball(new_ball)
 
     def _add_ball(self, ball):
         """
