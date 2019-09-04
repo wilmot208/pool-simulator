@@ -18,7 +18,8 @@ from pygame.color import *
 import pymunk
 import pymunk.pygame_util
 
-import table
+from ball import Ball
+from table import Table
 
 TABLE_COLOUR = (44.0, 62.0, 80.0)
 TABLE_LENGTH = 708
@@ -26,26 +27,6 @@ TABLE_HEIGHT = 411
 TABLE_PADDING = 25
 CORNER_POCKET_WIDTH = 34.2
 CENTRAL_POCKET_WIDTH = 38.1
-
-
-class Ball(object):
-    """
-    This class implements a pool ball.
-    """
-
-    def __init__(self):
-        self.mass = 10
-        self.radius = 8.55
-        self.inertia = pymunk.moment_for_circle(
-            self.mass, 0, self.radius, (0, 0))
-
-        self.body = pymunk.Body(self.mass, self.inertia)
-        self.x = random.randint(115, 350)
-        self.body.position = self.x, 250
-
-        self.shape = pymunk.Circle(self.body, self.radius, (0, 0))
-        self.shape.elasticity = 0.95
-        self.shape.friction = 0.9
 
 
 class PoolGame(object):
@@ -107,8 +88,8 @@ class PoolGame(object):
         :return: None
         """
         static_body = self._space.static_body
-        static_lines = table.Table({"height": TABLE_HEIGHT, "length": TABLE_LENGTH, "padding": TABLE_PADDING,
-                                    "corner_pocket_width": CORNER_POCKET_WIDTH, "central_pocket_width": CENTRAL_POCKET_WIDTH, "static_body": static_body})
+        static_lines = Table({"height": TABLE_HEIGHT, "length": TABLE_LENGTH, "padding": TABLE_PADDING,
+                              "corner_pocket_width": CORNER_POCKET_WIDTH, "central_pocket_width": CENTRAL_POCKET_WIDTH, "static_body": static_body})
         static_lines = static_lines.toList()
         for line in static_lines:
             line.elasticity = 0.95
