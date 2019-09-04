@@ -111,7 +111,7 @@ class PoolGame(object):
         """
         self._ticks_to_next_ball -= 1
         if self._ticks_to_next_ball <= 0:
-            self._create_ball()
+            self._add_ball(Ball(100, 250))
             self._ticks_to_next_ball = 100
         # Remove balls that fall below 100 vertically
         balls_to_remove = [
@@ -119,14 +119,6 @@ class PoolGame(object):
         for ball in balls_to_remove:
             self._space.remove(ball, ball.body)
             self._balls.remove(ball)
-
-    def _create_ball(self):
-        """
-        Create a ball.
-        :return:
-        """
-        new_ball = Ball()
-        self._add_ball(new_ball)
 
     def _add_ball(self, ball):
         """
