@@ -1,7 +1,3 @@
-"""This example spawns (bouncing) balls randomly on a L-shape constructed of 
-two segment shapes. Not interactive.
-"""
-
 __version__ = "$Id:$"
 __docformat__ = "reStructuredText"
 
@@ -22,6 +18,7 @@ from ball import Ball
 from table import Table
 
 from constants import *
+
 
 class PoolGame(object):
     """
