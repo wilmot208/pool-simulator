@@ -16,8 +16,6 @@ class Ball(object):
             self.mass, 0, self.radius, (0, 0))
 
         self.body = pymunk.Body(self.mass, self.inertia)
-        # self.x = random.randint(115, 350)
-        # self.body.position = self.x, 250
         self.body.position = x, y
 
         self.shape = pymunk.Circle(self.body, self.radius, (0, 0))

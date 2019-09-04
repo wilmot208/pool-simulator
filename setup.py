@@ -100,16 +100,16 @@ class PoolGame(object):
                 self._running = False
             elif event.type == KEYDOWN and event.key == K_p:
                 pygame.image.save(self._screen, "bouncing_balls.png")
+            elif event.type == MOUSEBUTTONDOWN and event.button == 1:
+                x, y = event.pos
+                y = WINDOW_HEIGHT - y
+                self._add_ball(Ball(x, y))
 
     def _update_balls(self):
         """
         Create/remove balls as necessary. Call once per frame only.
         :return: None
         """
-        self._ticks_to_next_ball -= 1
-        if self._ticks_to_next_ball <= 0:
-            self._add_ball(Ball(100, 250))
-            self._ticks_to_next_ball = 100
         # Remove balls that fall below 100 vertically
         balls_to_remove = [
             ball for ball in self._balls if ball.body.position.y < -100]
