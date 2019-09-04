@@ -4,6 +4,8 @@ import random
 # pymunk imports
 import pymunk
 
+from constants import *
+
 
 class Ball(object):
     """
@@ -12,7 +14,7 @@ class Ball(object):
 
     def __init__(self):
         self.mass = 10
-        self.radius = 8.55
+        self.radius = 5.7 / 2 * SCALE_FACTOR
         self.inertia = pymunk.moment_for_circle(
             self.mass, 0, self.radius, (0, 0))
 
