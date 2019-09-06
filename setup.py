@@ -65,7 +65,7 @@ class PoolGame(object):
         # Main loop
         while self._running:
             # Progress time forward
-            for x in range(self._physics_steps_per_frame):
+            for _ in range(self._physics_steps_per_frame):
                 self._space.step(self._dt)
             self._process_events()
             self._update_balls()
@@ -123,9 +123,6 @@ class PoolGame(object):
                 min_x = min(min_x, l.x)
                 max_y = max(max_y, l.y)
                 min_y = min(min_y, l.y)
-            w, h = max_x - min_x, max_y - min_y
-
-            center = Vec2d(min_x + w/2., min_y + h/2.)
 
             r += 30
             if r > 255:
@@ -137,7 +134,7 @@ class PoolGame(object):
                         space.static_body, line[i], line[i+1], 1)
                     shape.friction = 0.9
                     shape.elasticity = 0.95
-                    shape.color = (255, 255, 255)
+                    shape.color = (0, 0, 0)
                     space.add(shape)
 
     def _process_events(self):
