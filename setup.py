@@ -21,6 +21,9 @@ from table import Table
 
 from constants import *
 
+import time
+import math
+
 
 class PoolGame(object):
     """
@@ -45,6 +48,16 @@ class PoolGame(object):
         self._clock = pygame.time.Clock()
 
         self._draw_options = pymunk.pygame_util.DrawOptions(self._screen)
+
+
+        self._background_image = pygame.image.load("table.png")
+        self._power_button = pygame.image.load("power_button.jpg")
+        self._power_bar = pygame.image.load("power_bar.png")
+
+        self._press_start = time.time()
+        self._increasing_power = False 
+        self._should_reset = False
+        self._release_height = 0
 
         # Static barrier walls (lines) that the balls bounce off of
         self._add_static_scenery()
@@ -149,11 +162,19 @@ class PoolGame(object):
                 self._running = False
             elif event.type == KEYDOWN and event.key == K_p:
                 pygame.image.save(self._screen, "bouncing_balls.png")
-            elif event.type == MOUSEBUTTONDOWN and event.button == 1:
+            elif event.type == MOUSEBUTTONDOWN and self._power_button.get_rect().move(WINDOW_LENGTH - 50, WINDOW_HEIGHT - 50).collidepoint(pygame.mouse.get_pos()):
+                self._press_start = time.time()
+                self._increasing_power = True
+                print ("You're clicking on me!")
+            elif event.type == MOUSEBUTTONDOWN and event.button == 1: 
                 x, y = event.pos
                 y = WINDOW_HEIGHT - y
                 self._add_ball(Ball(x, y))
-
+            elif event.type == MOUSEBUTTONUP:
+                print ("Mouse was pressed for: " + str(time.time() - self._press_start) + " seconds.")
+                self._release_height = self._get_power_bar_height(time.time())
+                self._increasing_power = False
+    
     def _update_balls(self):
         """
         Create/remove balls as necessary. Call once per frame only.
@@ -180,8 +201,28 @@ class PoolGame(object):
         :return: None
         """
         self._screen.fill(TABLE_COLOUR)
-        background_image = pygame.image.load("table.png")
-        self._screen.blit(background_image, [0, 0])
+        self._screen.blit(self._background_image, [0, 0])
+        self._screen.blit(self._power_button, [WINDOW_LENGTH - 50, WINDOW_HEIGHT - 50])
+
+    def _get_power_bar_position(self): 
+        if self._should_reset == True:
+            return [0, 0]
+        if self._increasing_power == False:
+            return [0, self._release_height]
+        else: 
+            return [0, self._get_power_bar_height(time.time())]
+
+    def _get_power_bar_height(self, t): 
+        return self._get_hitting_power(t) * (WINDOW_HEIGHT - 50)
+
+    def _get_hitting_power(self, t):
+        time_interval = int(math.floor(t - self._press_start))
+
+        if time_interval % 2 == 0:
+            return (math.e ** math.e ** ((t - self._press_start) % 1) - math.e) / (math.e ** math.e - math.e) 
+        else: 
+            return (math.e ** math.e ** -((t - self._press_start) % 1 - 1) - math.e) / (math.e ** math.e - math.e)
+
 
     def _draw_objects(self):
         """
@@ -189,7 +230,7 @@ class PoolGame(object):
         :return: None
         """
         self._space.debug_draw(self._draw_options)
-
+        self._screen.blit(self._power_bar, self._get_power_bar_position())
 
 if __name__ == '__main__':
     game = PoolGame()
